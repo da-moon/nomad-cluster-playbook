@@ -1,0 +1,20 @@
+---
+- block:
+  - name: "Making sure older versions of Docker are not installed."
+    package:
+      name:
+        - "docker"
+        - "docker-engine"
+      state: absent
+  - name : "adding docker repository gpg key"
+    apt_key:
+      url: "{{ docker_repository_gpg_url }}"
+      state: present  
+  - name : "adding docker repository source"
+    apt_repository:
+      repo: "{{ docker_linux_repository_source }}"
+      state: present
+      filename: docker
+      update_cache: yes
+  become: yes
+  

@@ -1,0 +1,23 @@
+
+- name: Hashicorp Cluster nomad setup playbooks
+  hosts: pre-staging
+  gather_facts: yes
+  pre_tasks:
+  - name: "Asserting variables globally used variables"
+    assert:
+      that:
+        - vault_password_file is defined
+  vars:
+    nomad_tls_disable : false
+    override_certificate: true
+    certificate_root_dir: "{{ inventory_dir+'/host_vars/certificates'}}"
+  roles:
+    - { role: 03-install-nomad, tags: ["03-install-nomad"]}       
+    - { role: 04-nomad-certificates, tags: ["04-nomad-certificates"] }
+    # - role: 05-configure-nomad 
+    #   tags: 
+    #     - "05-configure-nomad" 
+    #   vars:
+    #     force_bootstrap: true
+    #     log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
+    # - { role: 06-unseal-nomad, tags: ["06-unseal-nomad"]}
