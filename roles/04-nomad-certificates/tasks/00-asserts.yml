@@ -28,5 +28,6 @@
       - certificate_root_dir is defined
       - private_ip is defined
       - cfssl_config_path is defined
+      - nomad_tls_disable is defined
 
       

@@ -1,4 +1,4 @@
-DELAY:=
+DELAY:=5
 # container specific vars
 PRIVILEGED_CONTAINER_SUPPORT:=true
 LXC_IMAGE:=images:debian/buster

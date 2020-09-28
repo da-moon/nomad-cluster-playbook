@@ -32,10 +32,4 @@ pre-staging:
 	- $(call print_running_target)
 	- @$(MAKE) --no-print-directory -f $(THIS_FILE) ansible-pre-staging
 	- $(call print_completed_target)	
-.PHONY: ansible
-.SILENT: ansible
-ansible: 
-	- $(call print_running_target)
-	- $(info $(patsubst ./%,%,$(filter-out %vars.mk , $(wildcard ./artifacts/*/make/*.mk))))
-	- $(info $(ARTIFACTS:%=artifacts/%/make/vars.mk))
-	- $(call print_completed_target)
+

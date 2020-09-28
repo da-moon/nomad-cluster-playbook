@@ -1,15 +1,18 @@
-CONTAINER_NAME=$(PROJECT_NAME)
+NOMAD_SERVER_TARGETS:=$(PROJECT_NAME)-server
+NOMAD_CLIENT_TARGETS:=$(PROJECT_NAME)-client
 ifneq ($(CONTAINER_COUNT),)
 CONTAINER_SEQ:=$(shell seq $(CONTAINER_COUNT))
-CONTAINER_NAME = $(CONTAINER_SEQ:%=$(PROJECT_NAME)-%)
+NOMAD_SERVER_TARGETS = $(CONTAINER_SEQ:%=$(PROJECT_NAME)-server-%)
+NOMAD_CLIENT_TARGETS = $(CONTAINER_SEQ:%=$(PROJECT_NAME)-client-%)
 endif
 
-
-LXD_TARGETS = $(CONTAINER_NAME:%=lxd-%)
-LXD_LAUNCH_TARGETS = $(CONTAINER_NAME:%=lxd-launch-%)
-LXD_START_TARGETS = $(CONTAINER_NAME:%=lxd-start-%)
-LXD_STOP_TARGETS = $(CONTAINER_NAME:%=lxd-stop-%)
-LXD_CLEAN_TARGETS = $(CONTAINER_NAME:%=lxd-clean-%)
+NOMAD_SERVER_CONTAINERS=$(NOMAD_SERVER_TARGETS:%=lxd-%)
+NOMAD_CLIENT_CONTAINERS=$(NOMAD_CLIENT_TARGETS:%=lxd-%)
+LXD_TARGETS = $(NOMAD_SERVER_CONTAINERS) $(NOMAD_CLIENT_CONTAINERS)
+LXD_LAUNCH_TARGETS = $(NOMAD_SERVER_TARGETS:%=lxd-launch-%) $(NOMAD_CLIENT_TARGETS:%=lxd-launch-%)
+LXD_START_TARGETS = $(NOMAD_SERVER_TARGETS:%=lxd-start-%) $(NOMAD_CLIENT_TARGETS:%=lxd-start-%)
+LXD_STOP_TARGETS = $(NOMAD_SERVER_TARGETS:%=lxd-stop-%) $(NOMAD_CLIENT_TARGETS:%=lxd-stop-%)
+LXD_CLEAN_TARGETS = $(NOMAD_SERVER_TARGETS:%=lxd-clean-%) $(NOMAD_CLIENT_TARGETS:%=lxd-clean-%)
 
 .PHONY: $(LXD_TARGETS)
 .SILENT: $(LXD_TARGETS)
@@ -46,7 +49,9 @@ endif
 	- $(eval command=$(command) || lxc start "$(name)")
 	- @$(MAKE) --no-print-directory \
 	 -f $(THIS_FILE) shell cmd="${command}"
-	- sleep 3
+ifneq ($(DELAY),)
+	- sleep $(DELAY)
+endif
 	- $(call print_completed_target)
 
 .PHONY: lxd-stop

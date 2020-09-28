@@ -37,14 +37,29 @@ this master-key is used to encrypt/decrypt secrets and artifacts such as certifi
 - launch bare-bone lxd containers in case you want to run playbook against local pre-staging environment with the following command
 
   - you can customize lxd base image by changing `LXC_IMAGE` variable in `vars.mk`. default image is `debian/buster`
-  - you can customize number of containers by changing `CONTAINER_COUNT` variable in `vars.mk`. default number of containers is 3.
+  - the following make target generates two set of nodes, `server` and `client`, each set with container count of `CONTAINER_COUNT` which you can customize number of containers by changing it. It is recommended to have at least 3 nodes in each set.
   - if you have not installed `lxd`, install `snap` package manager and run `contrib/lxd-init/lxd` script. refer to [`lxd-init-readme`](contrib/lxd-init/README) for more information.
 
 ```bash
 make -j`nproc` init
 ```
 
-> `[NOTE]` this make target installs necessary packages for a debian based environment. in case you change the image to a non-debian based distro, this target will not work.
+> `[NOTE]` increase `DELAY` value in `vars.mk` in case container ip was not available when corresponding make target is running.
+
+> `[NOTE]` this make target installs necessary packages for a debian based environment. in case you change the image to a non-debian based distribution, this target will not work.
+
+> `[NOTE]` while it is possible to have a nomad agent act both as client and server, it is not recommended to do so. As long as long as all nodes resources, no problem arises but in case a job saturates one of the resources (e.g cpu, storage) on a node and cause it to crash or be unable to do work in a timely manner, the other nodes would eventually consider that job as "lost" and reschedule it. The job would then cause its new host to become unresponsive and you would no longer have a functioning Nomad cluster.
+
+> `[NOTE]` Another issue that might lead to making server unresponsive is the growth of Nomad server memory,which can happen for a variety of reasons over time, isn't accounted for when making scheduling decisions since Nomad isn't managing itself and associated resource constraints. in case one is using systemd for running nomad, something like the following snippet in the service can limit resource consumption.
+
+```service
+[Service]
+# ....
+MemoryAccounting=true
+MemoryHigh=1024K
+MemoryMax=4096K
+# ....
+```
 
 - run ansible and provision pre-staging environment by running the following command
 
@@ -59,3 +74,17 @@ make pre-staging
 ```bash
 make -j`nproc` lxd-clean
 ```
+
+- decrypt gossip encryption key (e.g for prestaging)
+
+```bash
+ansible localhost -m debug -a var="gossip_encryption_key" -e "@inventories/pre-staging/group_vars/gossip_encryption_key.yml" --vault-password-file ~/.vault_pass.txt
+```
+
+## TODO
+
+- [] fix cewrts
+- [] nomad client
+- [] bootstrap acl policy
+- [] add vault integration
+- [] add consul integration
