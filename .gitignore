@@ -1,4 +1,4 @@
 .retry
 .tmp
 tmp
-*/certificates/nomad/
+inventories/pre-staging/host_vars/certificates/*
