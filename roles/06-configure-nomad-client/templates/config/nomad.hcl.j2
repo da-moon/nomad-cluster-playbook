@@ -12,18 +12,28 @@ advertise {
   rpc  = "{{ private_ip }}"
   serf = "{{ private_ip }}" 
 }
-server {
+client {
   enabled          = true
-  bootstrap_expect = {{ play_hosts  | length }}
-  data_dir=  "{{ nomad_storage_path }}"
-  encrypt= "{{ gossip_encryption_key }}"
+  state_dir=  "{{ nomad_client_path }}"
+  options {
+    docker.auth.config = "/root/.docker/config.json"
+    # docker.privileged.enabled = true
+    # driver.raw_exec.enable = "1"
+    driver.whitelist = "docker,exec"
+    user.blacklist = "root"
+  }
+  # binding ssl certs
+  host_volume "ca-certificates" {
+    path = "/etc/ssl/certs"
+    read_only = true
+  }
   server_join {
     retry_join = {{retry_join_ips}}
-    #retry_max = 3
+    retry_max = 3
     retry_interval = "15s"
   }
 }
-client {
+server {
   enabled = false
 }
 
@@ -33,18 +43,15 @@ telemetry {
   prometheus_metrics         = true
 }
 autopilot {
-    cleanup_dead_servers      = true
     last_contact_threshold    = "200ms"
     max_trailing_logs         = 250
-    server_stabilization_time = "10s"
 }
 {% if not nomad_tls_disable %}tls {
 
   http = true
   rpc  = true
   ca_file   = "{{ nomad_tls_path }}/ca.pem"
-  cert_file = "{{ nomad_tls_path }}/server.pem"
-  key_file  = "{{ nomad_tls_path }}/server-key.pem"
-  verify_server_hostname=true
+  cert_file = "{{ nomad_tls_path }}/client.pem"
+  key_file  = "{{ nomad_tls_path }}/client-key.pem"
   verify_https_client={% if nomad_ui %}false{% else %}true{% endif %}
 }{% endif %}

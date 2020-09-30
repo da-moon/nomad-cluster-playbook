@@ -14,23 +14,21 @@
           map(attribute='path')  | 
           list 
         }}
-  - name: "uploading nomad systemd service file"
+  - name: "uploading nomad-server systemd service file"
     template: 
       src: "service/nomad.service.j2"
-      dest: "{{ systemd_unit_directory }}/nomad.service"
+      dest: "{{ systemd_unit_directory }}/nomad-server.service"
       force: yes
       decrypt: yes
-  - debug:
-      var : "nomad_ui"
   - block:
     - name: "reloading systemctl"
       command: "systemctl daemon-reload"
-    - name: "making sure nomad service runs at startup"
-      command: "systemctl enable --now nomad"
-    - name: "making sure nomad service is not stopped"
-      command: "systemctl start nomad"
-    - name: "restarting nomad service"
-      command: "systemctl restart nomad"
-    - name: "make sure nomad service is really running"
-      command: "systemctl is-active nomad"
+    - name: "making sure nomad-server service runs at startup"
+      command: "systemctl enable --now nomad-server"
+    - name: "making sure nomad-server service is not stopped"
+      command: "systemctl start nomad-server"
+    - name: "restarting nomad-server service"
+      command: "systemctl restart nomad-server"
+    - name: "make sure nomad-server service is really running"
+      command: "systemctl is-active nomad-server"
   become: yes

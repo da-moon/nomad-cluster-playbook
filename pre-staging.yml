@@ -12,8 +12,7 @@
     override_certificate: true
     certificate_root_dir: "{{ inventory_dir+'/host_vars/certificates'}}"
   roles:
-    # - { role: 03-install-nomad, tags: ["03-install-nomad"]}       
-    # - { role: 04-nomad-certificates, tags: ["04-nomad-certificates"] }
+    - { role: 04-nomad-certificates, tags: ["04-nomad-certificates"] }
     - role: 05-configure-nomad-server 
       tags: 
         - "05-configure-nomad-server" 
@@ -21,24 +20,25 @@
         log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
         # => [ WARN ] if set to true, then the server would not verify client tls
         nomad_ui : "{{ lookup('env','NOMAD_UI') | default(true, true) }}"
-# - name: Hashicorp Cluster nomad server setup playbooks
-#   hosts: pre-staging-clients
-#   gather_facts: yes
-#   pre_tasks:
-#   - name: "Asserting variables globally used variables"
-#     assert:
-#       that:
-#         - vault_password_file is defined
-#   vars:
-#     nomad_tls_disable : false
-#     override_certificate: true
-#     certificate_root_dir: "{{ inventory_dir+'/host_vars/certificates'}}"
-#   roles:
-#     - { role: 03-install-nomad, tags: ["03-install-nomad"]}       
-#     # - role: 05-configure-nomad 
-#     #   tags: 
-#     #     - "05-configure-nomad" 
-#     #   vars:
-#     #     force_bootstrap: true
-#     #     log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
-#     # - { role: 06-unseal-nomad, tags: ["06-unseal-nomad"]}
+- name: Hashicorp Cluster nomad client setup playbooks
+  hosts: pre-staging-clients
+  gather_facts: yes
+  pre_tasks:
+  - name: "Asserting variables globally used variables"
+    assert:
+      that:
+        - vault_password_file is defined
+  - debug: 
+      msg: "{{ groups['pre-staging-servers']  }}"
+  vars:
+    nomad_tls_disable : false
+    override_certificate: true
+    certificate_root_dir: "{{ inventory_dir+'/host_vars/certificates'}}"
+  roles:
+    - role: 06-configure-nomad-client
+      tags: 
+        - "06-configure-nomad-client" 
+      vars:
+        log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
+        # => [ WARN ] if set to true, then the server would not verify client tls
+        nomad_ui : "{{ lookup('env','NOMAD_UI') | default(true, true) }}"
