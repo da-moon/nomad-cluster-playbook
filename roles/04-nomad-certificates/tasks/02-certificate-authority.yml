@@ -36,3 +36,4 @@
       ca_pem_enc.stat.exists == False or
       ca_key_pem_enc.stat.exists == False or
       ca_csr_enc.stat.exists == False
+  run_once: true

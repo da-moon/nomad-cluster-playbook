@@ -104,54 +104,54 @@ function ifup {
     output=$(ip link show "$1" ) && [[ -n $output ]]
 }
 ###### execution  ########
-# log_info "installing packages"
-# sudo snap refresh
-# sudo snap install core 
-# sudo snap refresh
-# sudo snap install lxd 
-# log_info "ensure '$USER' belongs to lxd group"
-# getent group lxd > /dev/null || sudo groupadd lxd
-# sudo usermod --append --groups lxd "$USER"
+log_info "installing packages"
+sudo snap refresh
+sudo snap install core 
+sudo snap refresh
+sudo snap install lxd 
+log_info "ensure '$USER' belongs to lxd group"
+getent group lxd > /dev/null || sudo groupadd lxd
+sudo usermod --append --groups lxd "$USER"
 
-# if ifup lxdbr0; then
-#   log_warn "'lxdbr0' exists. removing ..."
-#   sudo ip link set lxdbr0 down
-#   sudo ip link delete lxdbr0 type bridge
-# fi
+if ifup lxdbr0; then
+  log_warn "'lxdbr0' exists. removing ..."
+  sudo ip link set lxdbr0 down
+  sudo ip link delete lxdbr0 type bridge
+fi
 
 
-# interfaces=($(ip link | awk -F: '$0 !~ "lo|vir|wl|lxd|docker|^[^0-9]"{print $2;getline}'))
-# log_info "initializing lxd on interface ${interfaces[0]}"
-# cat <<EOF | sudo lxd init --preseed
-# config: {}
-# networks:
-# - config:
-#     ipv4.address: auto
-#     ipv6.address: auto
-#   description: ""
-#   name: lxdbr0
-#   type: ""
-# storage_pools:
-# - config:
-#     size: 30GB
-#   description: ""
-#   name: default
-#   driver: btrfs
-# profiles:
-# - config: {}
-#   description: ""
-#   devices:
-#     ${interfaces[0]}:
-#       name: ${interfaces[0]}
-#       network: lxdbr0
-#       type: nic
-#     root:
-#       path: /
-#       pool: default
-#       type: disk
-#   name: default
-# cluster: null
-# EOF
+interfaces=($(ip link | awk -F: '$0 !~ "lo|vir|wl|lxd|docker|^[^0-9]"{print $2;getline}'))
+log_info "initializing lxd on interface ${interfaces[0]}"
+cat <<EOF | sudo lxd init --preseed
+config: {}
+networks:
+- config:
+    ipv4.address: auto
+    ipv6.address: auto
+  description: ""
+  name: lxdbr0
+  type: ""
+storage_pools:
+- config:
+    size: 30GB
+  description: ""
+  name: default
+  driver: btrfs
+profiles:
+- config: {}
+  description: ""
+  devices:
+    ${interfaces[0]}:
+      name: ${interfaces[0]}
+      network: lxdbr0
+      type: nic
+    root:
+      path: /
+      pool: default
+      type: disk
+  name: default
+cluster: null
+EOF
 log_info "ensuring lxd is running without any issuesi by logging in 'lxd' group and launching a new image"
 newgrp lxd <<EOF
 lxc launch images:debian/buster test && \

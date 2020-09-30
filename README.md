@@ -81,9 +81,14 @@ make -j`nproc` lxd-clean
 ansible localhost -m debug -a var="gossip_encryption_key" -e "@inventories/pre-staging/group_vars/gossip_encryption_key.yml" --vault-password-file ~/.vault_pass.txt
 ```
 
+- in case your host machine is a remote server ( lxd is running on remote), use the following snippet on host to redirect all connections to port `4646` to a nomad server's container
+
+```bash
+iptables -t nat -A PREROUTING -i $(ip link | awk -F: '$0 !~ "lo|vir|wl|lxd|docker|^[^0-9]"{print $2;getline}') -p tcp --dport 4646 -j DNAT --to "$(lxc list --format json | jq -r '.[] | select((.name | contains ("server")) and (.status=="Running")).state.network.eth0.addresses|.[] | select(.family=="inet").address' | head -n 1):4646"
+```
+
 ## TODO
 
-- [] fix cewrts
 - [] nomad client
 - [] bootstrap acl policy
 - [] add vault integration

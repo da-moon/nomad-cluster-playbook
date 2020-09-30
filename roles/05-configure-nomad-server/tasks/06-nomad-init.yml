@@ -12,12 +12,14 @@
       path: "{{ nomad_profile_path }}"
       block: |
         export NOMAD_ADDR='http{% if not nomad_tls_disable %}s{% endif %}://127.0.0.1:{{ nomad_api_port }}'
-        
+        {% if not nomad_tls_disable %}export NOMAD_CACERT='{{ nomad_tls_path }}/ca.pem'
+        export NOMAD_CLIENT_KEY='{{ nomad_tls_path }}/server-key.pem'
+        export NOMAD_CLIENT_CERT='{{ nomad_tls_path }}/server.pem'
+        {% endif %}
   become: yes
-  # {% if not nomad_tls_disable %}export NOMAD_CACERT='{{ nomad_tls_path }}/ca.pem'
-  #       export NOMAD_CLIENT_KEY='{{ nomad_tls_path }}/server-key.pem'
-  #       export NOMAD_CLIENT_CERT='{{ nomad_tls_path }}/server.pem'
-  #       {% endif %}
+# [TODO] => ACL
+
+
 # - name: "checking status of nomad server"
 #   shell: >
 #     nomad status -address=http{% if not nomad_tls_disable %}s{% endif %}://127.0.0.1:{{ nomad_api_port }} 

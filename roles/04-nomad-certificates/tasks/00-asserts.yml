@@ -26,7 +26,8 @@
   assert:
     that:
       - certificate_root_dir is defined
-      - private_ip is defined
+      - private_ips is defined
+      - public_ips is defined
       - cfssl_config_path is defined
       - nomad_tls_disable is defined
 

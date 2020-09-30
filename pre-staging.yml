@@ -12,17 +12,15 @@
     override_certificate: true
     certificate_root_dir: "{{ inventory_dir+'/host_vars/certificates'}}"
   roles:
-    - debug:
-        var: 'ansible_play_hosts'
-    # # - { role: 03-install-nomad, tags: ["03-install-nomad"]}       
+    # - { role: 03-install-nomad, tags: ["03-install-nomad"]}       
     # - { role: 04-nomad-certificates, tags: ["04-nomad-certificates"] }
-    # - role: 05-configure-nomad-server 
-    #   tags: 
-    #     - "05-configure-nomad-server" 
-    #   vars:
-    #     log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
-    #     # => [ WARN ] if set to true, then the server would not verify client tls
-    #     nomad_ui : "{{ lookup('env','NOMAD_UI') | default(true, true) }}"
+    - role: 05-configure-nomad-server 
+      tags: 
+        - "05-configure-nomad-server" 
+      vars:
+        log_level : "{{ lookup('env','NOMAD_LOG_LEVEL') | default('DEBUG', true) }}"
+        # => [ WARN ] if set to true, then the server would not verify client tls
+        nomad_ui : "{{ lookup('env','NOMAD_UI') | default(true, true) }}"
 # - name: Hashicorp Cluster nomad server setup playbooks
 #   hosts: pre-staging-clients
 #   gather_facts: yes
