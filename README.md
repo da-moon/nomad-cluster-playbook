@@ -11,6 +11,8 @@
 
 Cloud agnostic Ansible playbooks used to deploy nomad cluster.
 
+[![asciicast](https://asciinema.org/a/Cf9hLwDK0gaaHZ3idfGWnD1YW.svg)](https://asciinema.org/a/Cf9hLwDK0gaaHZ3idfGWnD1YW)
+
 ## commands
 
 - these playbooks only work when ansible host and remotes are both `debian` based linux distribution and cpu architecture must be `amd64`.
