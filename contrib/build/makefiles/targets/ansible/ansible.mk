@@ -19,6 +19,7 @@ ansible-pre-staging-init:
 		jq -r '.state.network.eth0.addresses' | \
 		jq -r '.[] | select(.family=="inet").address' | \
 		tee -a $(PWD)/inventories/pre-staging/hosts
+	- sed -i "s/\([[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*\.[[:digit:]]*\)/\1 ansible_user=$$USER/g" $(PWD)/inventories/pre-staging/hosts
 	- $(call print_completed_target)
 .PHONY: ansible-pre-staging
 .SILENT: ansible-pre-staging
