@@ -1,12 +1,12 @@
 # nomad-cluster-playbook
 
 <p align="center">
-  <a href="https://gitpod.io#https://github.com/da-moon/nginx-lua">
+  <a href="https://gitpod.io#https://github.com/da-moon/nomad-cluster-playbook">
     <img src="https://img.shields.io/badge/open%20in-gitpod-blue?logo=gitpod" alt="Open In GitPod">
   </a>
-  <img src="https://img.shields.io/github/languages/code-size/da-moon/nginx-lua" alt="GitHub code size in bytes">
-  <img src="https://img.shields.io/github/commit-activity/w/da-moon/nginx-lua" alt="GitHub commit activity">
-  <img src="https://img.shields.io/github/last-commit/da-moon/nginx-lua/master" alt="GitHub last commit">
+  <img src="https://img.shields.io/github/languages/code-size/da-moon/nomad-cluster-playbook" alt="GitHub code size in bytes">
+  <img src="https://img.shields.io/github/commit-activity/w/da-moon/nomad-cluster-playbook" alt="GitHub commit activity">
+  <img src="https://img.shields.io/github/last-commit/da-moon/nomad-cluster-playbook/master" alt="GitHub last commit">
 </p>
 
 Cloud agnostic Ansible playbooks used to deploy nomad cluster.
