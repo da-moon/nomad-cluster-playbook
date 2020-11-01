@@ -23,7 +23,7 @@ Cloud agnostic Ansible playbooks used to deploy nomad cluster.
 ansible-generate -i production staging pre-staging -r 00-ansible-controller -p . -a
 ```
 
-- generate staging and production `ansible-nomad` encryption masterkeys and store them in `STAGING_VAULT_PASSWORD_FILE` and `VAULT_PASSWORD_FILE` files (located in `vars.mk`). you can use the following snippet to generate a 16 byte long hex string.
+- generate staging and production `ansible-vault` encryption masterkeys and store them in `STAGING_VAULT_PASSWORD_FILE` and `VAULT_PASSWORD_FILE` files (located in `vars.mk`). you can use the following snippet to generate a 16 byte long hex string.
 
 ```bash
 # => with GNU coreutils 'head'
