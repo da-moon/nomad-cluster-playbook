@@ -1,0 +1,29 @@
+root = true
+
+[*.hcl.j2]
+indent_style = space
+indent_size = 2
+end_of_line = 1f
+insert_final_newline = true
+charset = utf_8
+
+[*.md]
+indent_style = space
+indent_size = 2
+end_of_line = 1f
+insert_final_newline = true
+charset = utf_8
+
+[*.yml]
+indent_style = space
+indent_size = 2
+end_of_line = 1f
+insert_final_newline = true
+charset = utf_8
+
+[*.mk]
+indent_style = space
+indent_size = 2
+end_of_line = 1f
+insert_final_newline = true
+charset = utf_8
