@@ -1,11 +1,15 @@
 ---
 - block:
   - name: "Making sure older versions of Docker are not installed."
-    package:
+    apt:
       name:
         - "docker"
         - "docker-engine"
+        - "docker.io" 
+        - "containerd" 
+        - "runc"
       state: absent
+      purge: true
   - name : "adding docker repository gpg key"
     apt_key:
       url: "{{ docker_repository_gpg_url }}"
@@ -19,7 +23,10 @@
   - name: "Installing docker"
     apt:
       update_cache: yes
-      pkg: "docker-ce"
+      pkg: 
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
       install_recommends: true
       state: latest
   - command: docker-compose --version
