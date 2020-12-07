@@ -16,10 +16,10 @@ client {
   enabled          = true
   state_dir=  "{{ nomad_client_path }}"
   options {
-    docker.auth.config = "/root/.docker/config.json"
+    # docker.auth.config = "/root/.docker/config.json"
     # docker.privileged.enabled = true
-    # driver.raw_exec.enable = "1"
-    driver.whitelist = "docker,exec"
+    driver.raw_exec.enable = "1"
+    driver.whitelist = "docker,exec,raw_exec"
     user.blacklist = "root"
   }
   # binding ssl certs
